@@ -5,6 +5,8 @@ import react from '@vitejs/plugin-react';
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
+      // Use relative base to make built assets load correctly from arbitrary static directories
+      base: './',
       server: {
         port: 3000,
         host: '0.0.0.0',
