@@ -1,0 +1,8 @@
+{
+  "name": "Breathing Dandelion-15",
+  "description": "An interactive relaxation experience where you control a dandelion with your breath and head movements.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
