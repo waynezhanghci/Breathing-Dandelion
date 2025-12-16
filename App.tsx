@@ -166,25 +166,38 @@ const App: React.FC = () => {
       <div className="absolute inset-0 pointer-events-none flex flex-col justify-between p-6 z-10">
         
         {/* Top Header Area */}
-        <div className="flex justify-between items-start pointer-events-auto w-full">
+        <div className="flex justify-between items-start pointer-events-auto w-full px-2 pt-2 md:px-6 md:pt-6">
            {/* Left: App Title */}
-           <div className="pt-2 pl-2 flex flex-col">
-             <h1 className="text-xl md:text-2xl font-serif text-white tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] opacity-90">
+           <div className="flex flex-col gap-3">
+             <h1 className="text-3xl md:text-5xl font-bold text-[#F3E1E4] tracking-tight drop-shadow-2xl">
                Breathing Dandelion
              </h1>
-             <p className="text-[10px] md:text-xs text-blue-50/60 font-light mt-1 max-w-[240px] md:max-w-sm leading-relaxed drop-shadow-sm">
-               允许自己，像蒲公英的种子一样，<br/>轻柔地降落到想去的地方。
-             </p>
+             <div className="text-sm md:text-base text-white/50 font-medium leading-relaxed space-y-1">
+               <p>允许自己，像蒲公英的种子一样，</p>
+               <p>轻柔地降落到想去的地方。</p>
+             </div>
            </div>
 
-           {/* Right: Stats */}
-           <div className="flex flex-col gap-4 items-end pr-2 pt-2">
-             {/* Release Count */}
-             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 text-right shadow-sm min-w-[100px]">
-               <div className="text-xs text-white/70 uppercase tracking-widest mb-1">RELEASE</div>
-               <div className="text-3xl font-light text-white font-mono">
-                 {freeCount.toString().padStart(2, '0')}
-               </div>
+           {/* Right: Stats Card */}
+           <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-5 border border-white/10 shadow-[0_8px_32px_0_rgba(31,38,135,0.15)] min-w-[130px] flex flex-col items-center transform transition-transform hover:scale-105">
+             <div className="text-[10px] text-white/40 font-bold tracking-[0.2em] mb-3 uppercase">
+               Today
+             </div>
+             <div className="w-8 h-px bg-white/10 mb-3"></div>
+             <div className="text-4xl font-bold text-[#F3E1E4] font-sans mb-1 tabular-nums">
+               {freeCount}
+             </div>
+             <div className="text-xs text-white/50 font-medium tracking-wide flex items-center gap-1.5">
+               Released 
+               {/* Dandelion Seed Icon */}
+               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="opacity-80">
+                 <path d="M12 22V10" />
+                 <path d="M12 10L7 3" />
+                 <path d="M12 10L17 3" />
+                 <path d="M12 10L12 2" />
+                 <path d="M12 10L9.5 4" />
+                 <path d="M12 10L14.5 4" />
+               </svg>
              </div>
            </div>
         </div>
@@ -194,23 +207,23 @@ const App: React.FC = () => {
         </div>
 
         {/* Bottom Instructions */}
-        <div className="flex justify-center pb-8">
-           <div className="bg-black/10 backdrop-blur-md rounded-full px-6 py-2 border border-white/20 flex gap-8 text-sm text-white/80 shadow-sm">
-              <span className={`transition-colors duration-300 ${currentAction === 'SWAYING' ? 'text-white font-bold drop-shadow-md' : ''}`}>
-                 ↔ Sway Head gently
+        <div className="flex justify-center pb-10">
+           <div className="bg-white/5 backdrop-blur-md rounded-full px-8 py-3 border border-white/10 flex gap-8 text-sm text-white/70 shadow-lg tracking-wide">
+              <span className={`transition-all duration-300 ${currentAction === 'SWAYING' ? 'text-white font-bold drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]' : ''}`}>
+                 ↔ Sway Head
               </span>
-              <span className="w-px bg-white/20"></span>
-              <span className={`transition-colors duration-300 ${currentAction === 'BLOWING' ? 'text-white font-bold drop-shadow-md' : ''}`}>
-                 💨 Blow into mic
+              <span className="w-px bg-white/10"></span>
+              <span className={`transition-all duration-300 ${currentAction === 'BLOWING' ? 'text-white font-bold drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]' : ''}`}>
+                 💨 Blow Mic
               </span>
            </div>
         </div>
       </div>
       
       {/* Debug/Feedback Visualization (Subtle) */}
-      <div className="absolute bottom-0 left-0 w-full h-1 bg-white/10">
+      <div className="absolute bottom-0 left-0 w-full h-1 bg-white/5 pointer-events-none">
         <div 
-          className="h-full bg-white transition-all duration-75 ease-out opacity-60 shadow-[0_0_10px_white]"
+          className="h-full bg-gradient-to-r from-blue-300 to-white transition-all duration-75 ease-out opacity-40 shadow-[0_0_15px_white]"
           style={{ width: `${Math.min(blowStrength * 100, 100)}%` }}
         />
       </div>
