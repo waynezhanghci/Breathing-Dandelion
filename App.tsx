@@ -18,6 +18,22 @@ const App: React.FC = () => {
   // Customization
   const [selectedColor, setSelectedColor] = useState<DandelionColor>('white');
 
+  // Color Definitions for cycling
+  const colorOptions: { key: DandelionColor; hex: string }[] = [
+    { key: 'white', hex: '#ffffff' },
+    { key: 'deepBlue', hex: '#5D7FE5' },
+    { key: 'lavender', hex: '#9899EE' },
+    { key: 'periwinkle', hex: '#B7C2ED' },
+    { key: 'pale', hex: '#FBE8FD' },
+    { key: 'pink', hex: '#FDBBDB' }
+  ];
+
+  const cycleColor = () => {
+    const currentIndex = colorOptions.findIndex(c => c.key === selectedColor);
+    const nextIndex = (currentIndex + 1) % colorOptions.length;
+    setSelectedColor(colorOptions[nextIndex].key);
+  };
+
   // Real-time sensor values
   const [swayValue, setSwayValue] = useState(0);
   const [blowStrength, setBlowStrength] = useState(0);
@@ -133,18 +149,6 @@ const App: React.FC = () => {
     );
   }
 
-  // Color selection button component
-  const ColorBtn = ({ color, active, onClick }: { color: string, active: boolean, onClick: () => void }) => (
-    <button 
-      onClick={onClick}
-      className={`w-10 h-10 rounded-full transition-all duration-300 ease-out border-2 shadow-lg hover:scale-110 active:scale-95
-        ${active ? 'border-white scale-110 ring-2 ring-white/30' : 'border-transparent opacity-80 hover:opacity-100'}
-      `}
-      style={{ backgroundColor: color }}
-      aria-label="Change color"
-    />
-  );
-
   return (
     <div className={`relative w-full h-screen ${bgStyle} overflow-hidden font-sans`}>
       {/* 3D Canvas Layer */}
@@ -155,17 +159,29 @@ const App: React.FC = () => {
         onStateChange={handleStateChange}
         onBlowSuccess={() => setFreeCount(c => c + 1)}
         onHappySway={() => setHappyCount(c => c + 1)}
+        onFlowerClick={cycleColor}
       />
 
       {/* Foreground UI Overlay */}
       <div className="absolute inset-0 pointer-events-none flex flex-col justify-between p-6 z-10">
         
-        {/* Top Info Panel */}
-        <div className="flex justify-end items-start pointer-events-auto">
-           <div className="flex flex-col gap-4">
-             {/* Free Count */}
-             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 text-right shadow-sm">
-               <div className="text-xs text-white/70 uppercase tracking-widest mb-1">Free Count</div>
+        {/* Top Header Area */}
+        <div className="flex justify-between items-start pointer-events-auto w-full">
+           {/* Left: App Title */}
+           <div className="pt-2 pl-2 flex flex-col">
+             <h1 className="text-xl md:text-2xl font-serif text-white tracking-wider drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] opacity-90">
+               Breathing Dandelion
+             </h1>
+             <p className="text-[10px] md:text-xs text-blue-50/60 font-light mt-1 max-w-[240px] md:max-w-sm leading-relaxed drop-shadow-sm">
+               允许自己，像蒲公英的种子一样，<br/>轻柔地降落到想去的地方。
+             </p>
+           </div>
+
+           {/* Right: Stats */}
+           <div className="flex flex-col gap-4 items-end pr-2 pt-2">
+             {/* Release Count */}
+             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 text-right shadow-sm min-w-[100px]">
+               <div className="text-xs text-white/70 uppercase tracking-widest mb-1">RELEASE</div>
                <div className="text-3xl font-light text-white font-mono">
                  {freeCount.toString().padStart(2, '0')}
                </div>
@@ -173,17 +189,7 @@ const App: React.FC = () => {
            </div>
         </div>
 
-        {/* Right Side: Color Picker */}
-        <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-auto flex flex-col gap-4 bg-white/10 backdrop-blur-md p-3 rounded-full border border-white/20 shadow-xl z-20">
-            <ColorBtn color="#ffffff" active={selectedColor === 'white'} onClick={() => setSelectedColor('white')} />
-            <ColorBtn color="#5D7FE5" active={selectedColor === 'deepBlue'} onClick={() => setSelectedColor('deepBlue')} />
-            <ColorBtn color="#9899EE" active={selectedColor === 'lavender'} onClick={() => setSelectedColor('lavender')} />
-            <ColorBtn color="#B7C2ED" active={selectedColor === 'periwinkle'} onClick={() => setSelectedColor('periwinkle')} />
-            <ColorBtn color="#FBE8FD" active={selectedColor === 'pale'} onClick={() => setSelectedColor('pale')} />
-            <ColorBtn color="#FDBBDB" active={selectedColor === 'pink'} onClick={() => setSelectedColor('pink')} />
-        </div>
-
-        {/* Center Guide (Dynamic) - REMOVED RELEASE TEXT */}
+        {/* Center Guide (Dynamic) */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center opacity-80 mix-blend-screen pointer-events-none">
         </div>
 

@@ -8,6 +8,7 @@ interface DandelionCanvasProps {
   onStateChange: (state: GameState) => void;
   onBlowSuccess: () => void;
   onHappySway: () => void;
+  onFlowerClick?: () => void;
 }
 
 // Visual Constants
@@ -98,6 +99,9 @@ export const DandelionCanvas: React.FC<DandelionCanvasProps> = (props) => {
     angle: 0,
     velocity: 0
   });
+
+  // Tracking position for click detection
+  const headPosRef = useRef({ x: 0, y: 0 });
 
   // Happy Count Logic State
   const swayStateRef = useRef<'CENTER' | 'LEFT' | 'RIGHT'>('CENTER');
@@ -197,6 +201,24 @@ export const DandelionCanvas: React.FC<DandelionCanvasProps> = (props) => {
       s.alpha = 1;
       s.size = 0.5 + Math.random() * 3.0;
     });
+  };
+
+  const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const rect = canvas.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+    
+    const dx = clickX - headPosRef.current.x;
+    const dy = clickY - headPosRef.current.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    // Hit test radius: slightly larger than sphere radius to make tapping easier
+    if (dist < SPHERE_RADIUS * 1.2) {
+      propsRef.current.onFlowerClick?.();
+    }
   };
 
   useEffect(() => {
@@ -336,6 +358,9 @@ export const DandelionCanvas: React.FC<DandelionCanvasProps> = (props) => {
       const headY = startY - Math.cos(currentSway) * stemLength;
       const midX = startX + Math.sin(currentSway * 0.4) * (stemLength * 0.6);
       const midY = startY - Math.cos(currentSway * 0.4) * (stemLength * 0.6);
+
+      // Store head position for click detection
+      headPosRef.current = { x: headX, y: headY };
 
       ctx.lineCap = 'round';
       
@@ -595,5 +620,5 @@ export const DandelionCanvas: React.FC<DandelionCanvasProps> = (props) => {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full z-0" />;
+  return <canvas ref={canvasRef} onClick={handleCanvasClick} className="absolute top-0 left-0 w-full h-full z-0 cursor-pointer" />;
 };
